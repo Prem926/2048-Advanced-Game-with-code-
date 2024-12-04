@@ -1,0 +1,58 @@
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [grid, gameOver]);
+
+  return (
+    <div className="flex flex-col items-center justify-center h-screen" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <Card className="w-96">
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold">2048 Game</CardTitle>
+          <p className="text-lg font-bold">Created by Prem Joshi</p>
+        </CardHeader>
+        <CardContent>
+          <Select className="w-full mb-4">
+            <SelectTrigger>
+              <SelectValue placeholder="Grid Size" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={3}>3x3</SelectItem>
+              <SelectItem value={4}>4x4</SelectItem>
+              <SelectItem value={5}>5x5</SelectItem>
+            </SelectContent>
+          </Select>
+          {gameStarted ? (
+            <div>
+              <div className="grid grid-cols-4 gap-4">
+                {grid.map((row, i) => (
+                  row.map((cell, j) => (
+                    <div key={`${i},${j}`} className={`w-16 h-16 flex items-center justify-center text-2xl font-bold border border-gray-400 ${cell === 0 ? 'bg-gray-200' : 'bg-yellow-500'}`}>
+                      {cell !== 0 && cell}
+                    </div>
+                  ))
+                ))}
+              </div>
+              <p className="text-lg font-bold mt-4">Score: {score}</p>
+              <p className="text-lg font-bold mt-4">Time: {time} seconds</p>
+              {gameOver && <p className="text-lg font-bold mt-4">Game Over!</p>}
+              <Button className="w-full mt-4" onClick={() => {
+                setGrid([]);
+                setScore(0);
+                setTime(0);
+                setGameOver(false);
+                setGameStarted(false);
+              }}>Restart</Button>
+            </div>
+          ) : (
+            <Button className="w-full mt-4" onClick={startGame}>Start Game</Button>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default Game2048;
